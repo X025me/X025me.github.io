@@ -8,7 +8,7 @@ RUN rm /usr/share/nginx/html/*
 COPY . /usr/share/nginx/html
 
 # Expose port 80 to serve the application
-EXPOSE 80
+EXPOSE 8005
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
