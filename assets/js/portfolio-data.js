@@ -12,11 +12,14 @@
  *
  * EDUCATION: same shape; shown under a separate heading.
  *
- * SOCIAL: set `linkedin` to your public profile URL (shown in Contact + footer).
+ * SOCIAL:
+ *   linkedin — public profile URL (Contact + footer)
+ *   telegramUsername — public @handle without @; powers t.me links + Telegram contact form
  */
 window.PORTFOLIO_DATA = {
   social: {
     linkedin: "https://www.linkedin.com/in/xo25me",
+    telegramUsername: "@suduer",
   },
 
   certifications: [

@@ -82,10 +82,41 @@
     });
   }
 
+  function normalizeTelegramUsername(raw) {
+    if (!raw || typeof raw !== "string") return "";
+    var s = raw.trim().replace(/^@+/, "");
+    return s.replace(/[^a-zA-Z0-9_]/g, "");
+  }
+
+  function applyTelegramContact() {
+    var data = window.PORTFOLIO_DATA || {};
+    var user = normalizeTelegramUsername((data.social || {}).telegramUsername || "");
+    var row = document.getElementById("contact-telegram-row");
+    var direct = document.getElementById("contact-telegram-direct");
+    var handle = document.getElementById("telegram-handle-display");
+    var form = document.getElementById("telegram-contact-form");
+    if (handle) handle.textContent = user ? "@" + user : "—";
+    if (direct) {
+      if (user) {
+        direct.href = "https://t.me/" + user;
+        direct.classList.remove("hidden");
+      } else {
+        direct.href = "#";
+        direct.classList.add("hidden");
+      }
+    }
+    if (row) {
+      if (user) row.classList.remove("hidden");
+      else row.classList.add("hidden");
+    }
+    if (form) form.setAttribute("data-telegram-user", user);
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     var data = window.PORTFOLIO_DATA || {};
     renderList("certifications-list", data.certifications);
     renderList("education-list", data.education);
     applySocialLinks();
+    applyTelegramContact();
   });
 })();

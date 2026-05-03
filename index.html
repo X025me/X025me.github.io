@@ -437,6 +437,19 @@
                                 <p class="text-gray-600"><a href="tel:+251917062816" class="hover:text-indigo-600">+251 917 062 816</a></p>
                             </div>
                         </div>
+
+                        <div id="contact-telegram-row" class="hidden flex items-start">
+                            <div class="flex-shrink-0 bg-sky-100 p-3 rounded-full">
+                                <i class="fab fa-telegram text-sky-600"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="font-medium">Telegram</h4>
+                                <p class="text-gray-600">
+                                    <span id="telegram-handle-display" class="font-mono text-sm">—</span>
+                                    · <a id="contact-telegram-direct" href="#" class="hidden text-sky-700 hover:text-sky-900 font-medium" target="_blank" rel="noopener noreferrer">Open chat</a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="mt-8">
@@ -456,30 +469,42 @@
                 </div>
                 
                 <div class="animate-fade-in" style="animation-delay: 0.4s;">
-                    <form class="bg-white p-8 rounded-xl shadow-lg">
-                        <div class="mb-6">
-                            <label for="name" class="block text-gray-700 font-medium mb-2">Your Name</label>
-                            <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                    <form id="telegram-contact-form" class="bg-white p-8 rounded-xl shadow-lg border border-sky-200/80 ring-1 ring-sky-100" action="#" method="get">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-500 text-white shadow-sm">
+                                <i class="fab fa-telegram text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Message on Telegram</h3>
+                                <p class="text-xs text-gray-500">Draft opens in Telegram — you send it there.</p>
+                            </div>
                         </div>
-                        
+                        <p class="text-sm text-gray-600 mb-6 mt-4">Fill in the details below, then continue in Telegram. Your text is passed as a prefilled draft when your client supports it (<code class="text-xs bg-gray-100 px-1 rounded">t.me/username?text=…</code>).</p>
+
                         <div class="mb-6">
-                            <label for="email" class="block text-gray-700 font-medium mb-2">Your Email</label>
-                            <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                            <label for="tg-name" class="block text-gray-700 font-medium mb-2">Your name</label>
+                            <input type="text" id="tg-name" name="tg-name" autocomplete="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition" placeholder="Jane Doe">
                         </div>
-                        
+
                         <div class="mb-6">
-                            <label for="subject" class="block text-gray-700 font-medium mb-2">Subject</label>
-                            <input type="text" id="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                            <label for="tg-email" class="block text-gray-700 font-medium mb-2">Email <span class="text-gray-400 font-normal">(optional)</span></label>
+                            <input type="email" id="tg-email" name="tg-email" autocomplete="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition" placeholder="you@example.com">
                         </div>
-                        
+
                         <div class="mb-6">
-                            <label for="message" class="block text-gray-700 font-medium mb-2">Your Message</label>
-                            <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition"></textarea>
+                            <label for="tg-subject" class="block text-gray-700 font-medium mb-2">Subject</label>
+                            <input type="text" id="tg-subject" name="tg-subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition" placeholder="Project / opportunity / question">
                         </div>
-                        
-                        <button type="submit" class="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
-                            Send Message <i class="fas fa-paper-plane ml-2"></i>
+
+                        <div class="mb-6">
+                            <label for="tg-message" class="block text-gray-700 font-medium mb-2">Message</label>
+                            <textarea id="tg-message" name="tg-message" rows="5" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition" placeholder="Write your message here…"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-sky-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-sky-600 transition-colors shadow-sm">
+                            <i class="fab fa-telegram mr-2"></i>Open in Telegram
                         </button>
+                        <p class="text-xs text-gray-500 mt-3 text-center">Set your handle in <code class="bg-gray-100 px-1 rounded">assets/js/portfolio-data.js</code> → <span class="font-mono">social.telegramUsername</span></p>
                     </form>
                 </div>
             </div>
@@ -616,26 +641,49 @@
             observer.observe(element);
         });
         
-        // Form submission
-        const contactForm = document.querySelector('form');
-        if (contactForm) {
-            contactForm.addEventListener('submit', (e) => {
+        // Telegram contact: opens t.me with prefilled draft (Telegram clients that support ?text=)
+        function normalizeTelegramUser(raw) {
+            if (!raw || typeof raw !== 'string') return '';
+            return raw.trim().replace(/^@+/, '').replace(/[^a-zA-Z0-9_]/g, '');
+        }
+
+        const telegramContactForm = document.getElementById('telegram-contact-form');
+        if (telegramContactForm) {
+            telegramContactForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                
-                // Get form values
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const subject = document.getElementById('subject').value;
-                const message = document.getElementById('message').value;
-                
-                // Here you would typically send the data to a server
-                console.log({ name, email, subject, message });
-                
-                // Show success message
-                alert('Thank you for your message! I will get back to you soon.');
-                
-                // Reset form
-                contactForm.reset();
+                const cfg = window.PORTFOLIO_DATA || {};
+                let user = normalizeTelegramUser(
+                    telegramContactForm.getAttribute('data-telegram-user') ||
+                        ((cfg.social || {}).telegramUsername || '')
+                );
+                if (!user) {
+                    alert('Telegram username is not set. Add social.telegramUsername (without @) in assets/js/portfolio-data.js.');
+                    return;
+                }
+
+                const name = (document.getElementById('tg-name') && document.getElementById('tg-name').value.trim()) || '';
+                const email = (document.getElementById('tg-email') && document.getElementById('tg-email').value.trim()) || '';
+                const subject = (document.getElementById('tg-subject') && document.getElementById('tg-subject').value.trim()) || '';
+                const message = (document.getElementById('tg-message') && document.getElementById('tg-message').value.trim()) || '';
+                if (!message) {
+                    alert('Please enter a message.');
+                    return;
+                }
+
+                const body = [
+                    '(via x025me.github.io contact form)',
+                    '',
+                    'Name: ' + (name || '—'),
+                    'Email: ' + (email || '—'),
+                    'Subject: ' + (subject || '—'),
+                    '',
+                    message
+                ].join('\n');
+
+                const maxLen = 1200;
+                const text = body.length > maxLen ? body.slice(0, maxLen - 18) + '\n…[truncated]' : body;
+                const tgUrl = 'https://t.me/' + user + '?text=' + encodeURIComponent(text);
+                window.open(tgUrl, '_blank', 'noopener,noreferrer');
             });
         }
     </script>
