@@ -49,6 +49,33 @@ window.PORTFOLIO_DATA = {
       summary:
         "A 12-week program that teaches you the basics of React and how to build a web application using React.",
     },
+    {
+      title: "CYBER SECURITY ANALYST SIMU-LAB SUITE",
+      issuer: "Presented by Cybint, a BARBRI company",
+      date: "Oct 2018",
+      link: "https://github.com/X025me/X025me.github.io/blob/main/assets/Exodus_Tesfaye_Gebre_CSA.pdf",
+      location: "Ari'el, Israel",
+      summary:
+        "The Cyber Security Analyst Simu-Lab Suite is a hands-on, virtual training environment originally developed by Cybint Solutions (now part of ThriveDX Enterprise). Designed for Security Operations Center (SOC) training, it equips learners with real-world skills in incident response, threat hunting, and malware analysis through safe, simulated enterprise scenarios",
+    },
+    {
+      title: "CYBER INTELLIGENCE COURSE",
+      issuer: "Presented by Cybint, a BARBRI company",
+      date: "Aug 2018",
+      link: "https://github.com/X025me/X025me.github.io/blob/main/assets/Exodus_Tesfaye_Gebre_intelligence.pdf",
+      location: "Ari'el, Israel",
+      summary:
+        "The program bridges the gap between deep technical cybersecurity and broad business operations. It is specifically built for non-technical professionals—such as those in law, finance, technology, and law enforcement—who need to gather web intelligence while safeguarding organizational assets.",
+    },
+    {
+      title: "CYBER SECURITY COURSE",
+      issuer: "Presented by Cybint, a BARBRI company",
+      date: "Aug 2018",
+      link: "https://github.com/X025me/X025me.github.io/blob/main/assets/Exodus_Tesfaye_Gebre_protection.pdf",
+      location: "Ari'el, Israel",
+      summary:
+        "The program bridges the gap between deep technical cybersecurity and broad business operations. It is specifically built for non-technical professionals—such as those in law, finance, technology, and law enforcement—who need to gather web intelligence while safeguarding organizational assets.",
+    },
   ],
 
   education: [
