@@ -43,7 +43,7 @@
 window.PORTFOLIO_DATA = {
   social: {
     linkedin: "https://www.linkedin.com/in/xo25me",
-    telegramUsername: "@suduer",
+    telegramUsername: "@sudower",
     githubUsername: "X025me",
   },
 

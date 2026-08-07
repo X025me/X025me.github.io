@@ -87,20 +87,46 @@
     );
   }
 
-  function featuredCredential(item) {
+  function featuredCredential(item, opts) {
     if (!item) return "";
+    opts = opts || {};
+    var variant = opts.variant || "cloud";
+    var eyebrow = opts.eyebrow || "Featured credential";
+    var eyebrowClass =
+      variant === "edu" ? "text-indigo-100/90" : "text-sky-100/90";
+    var metaClass =
+      variant === "edu" ? "text-indigo-100/90" : "text-sky-100/90";
+    var shellClass =
+      variant === "edu" ? "cred-featured cred-featured-edu" : "cred-featured";
     var rawUrl = item.credentialUrl || item.link || "";
     var href = rawUrl ? safeHref(rawUrl) : "";
     var hasVerify = href && href !== "#";
     var meta = [item.date, item.location].filter(Boolean).join(" · ");
-    var cta = hasVerify
-      ? '<a href="' +
+    var cta;
+    var ctaTextColor = variant === "edu" ? "text-indigo-900" : "text-sky-900";
+    if (hasVerify) {
+      cta =
+        '<a href="' +
         esc(href) +
-        '" class="inline-flex items-center gap-2 rounded-lg bg-white/95 px-4 py-2 text-sm font-semibold text-sky-900 hover:bg-white transition-colors" target="_blank" rel="noopener noreferrer">View credential <i class="fas fa-arrow-right text-xs"></i></a>'
-      : '<span class="inline-flex items-center gap-2 rounded-lg bg-white/15 px-4 py-2 text-sm font-medium text-white/90 ring-1 ring-white/25">Cloud architect track</span>';
+        '" class="inline-flex items-center gap-2 rounded-lg bg-white/95 px-4 py-2 text-sm font-semibold ' +
+        ctaTextColor +
+        ' hover:bg-white transition-colors" target="_blank" rel="noopener noreferrer">View credential <i class="fas fa-arrow-right text-xs"></i></a>';
+    } else if (opts.ctaLabel) {
+      cta =
+        '<span class="inline-flex items-center gap-2 rounded-lg bg-white/15 px-4 py-2 text-sm font-medium text-white/90 ring-1 ring-white/25"><i class="' +
+        esc(credentialIcon(item)) +
+        '" aria-hidden="true"></i> ' +
+        esc(opts.ctaLabel) +
+        "</span>";
+    } else {
+      cta =
+        '<span class="inline-flex items-center gap-2 rounded-lg bg-white/15 px-4 py-2 text-sm font-medium text-white/90 ring-1 ring-white/25">Cloud architect track</span>';
+    }
 
     return (
-      '<article class="cred-featured animate-fade-in">' +
+      '<article class="' +
+      shellClass +
+      ' animate-fade-in">' +
       '<div class="cred-shine" aria-hidden="true"></div>' +
       '<div class="relative flex flex-col sm:flex-row sm:items-center gap-5">' +
       '<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 ring-1 ring-white/25 text-2xl">' +
@@ -108,11 +134,17 @@
       esc(credentialIcon(item)) +
       '" aria-hidden="true"></i></div>' +
       '<div class="min-w-0 flex-1">' +
-      '<p class="text-xs font-semibold uppercase tracking-[0.14em] text-sky-100/90">Featured credential</p>' +
+      '<p class="text-xs font-semibold uppercase tracking-[0.14em] ' +
+      eyebrowClass +
+      '">' +
+      esc(eyebrow) +
+      "</p>" +
       '<h3 class="text-2xl sm:text-3xl font-bold mt-1 leading-tight">' +
       esc(item.title || "") +
       "</h3>" +
-      '<p class="text-sky-100/90 text-sm mt-1">' +
+      '<p class="' +
+      metaClass +
+      ' text-sm mt-1">' +
       esc(item.issuer || "") +
       (meta ? " · " + esc(meta) : "") +
       "</p>" +
@@ -128,40 +160,12 @@
     );
   }
 
-  function educationCard(item) {
-    if (!item) return "";
-    var meta = [item.date, item.location].filter(Boolean).join(" · ");
-    return (
-      '<article class="cred-edu animate-fade-in">' +
-      '<div class="relative">' +
-      '<p class="text-[11px] font-semibold uppercase tracking-[0.16em] text-indigo-100/90">Degree</p>' +
-      '<h3 class="text-xl sm:text-2xl font-bold mt-2 leading-snug">' +
-      esc(item.title || "") +
-      "</h3>" +
-      '<p class="text-indigo-100 mt-2 font-medium">' +
-      esc(item.issuer || "") +
-      "</p>" +
-      (meta
-        ? '<p class="text-indigo-200/90 text-sm mt-1">' + esc(meta) + "</p>"
-        : "") +
-      (item.summary
-        ? '<p class="text-white/85 text-sm mt-5 leading-relaxed max-w-md">' +
-          esc(item.summary) +
-          "</p>"
-        : "") +
-      '<div class="mt-6 flex items-center gap-2 text-indigo-100 text-xs font-semibold uppercase tracking-wide">' +
-      '<i class="fas fa-award" aria-hidden="true"></i> Foundation of the journey' +
-      "</div></div></article>"
-    );
-  }
-
   function renderCredentials() {
     var data = window.PORTFOLIO_DATA || {};
     var certs = data.certifications || [];
     var education = data.education || [];
     var featuredEl = document.getElementById("credentials-featured");
     var certList = document.getElementById("certifications-list");
-    var eduList = document.getElementById("education-list");
     var filtersEl = document.getElementById("cred-filters");
 
     var featured = null;
@@ -175,8 +179,21 @@
       rest = certs.slice(1);
     }
 
-    if (featuredEl) featuredEl.innerHTML = featuredCredential(featured);
-    if (eduList) eduList.innerHTML = education.map(educationCard).join("");
+    if (featuredEl) {
+      var blocks = [];
+      if (education[0]) {
+        blocks.push(
+          featuredCredential(education[0], {
+            variant: "edu",
+            eyebrow: "Degree",
+            ctaLabel: "Foundation of the journey",
+          })
+        );
+      }
+      if (featured) blocks.push(featuredCredential(featured));
+      featuredEl.innerHTML = blocks.join("");
+    }
+
     if (certList) {
       certList.innerHTML = rest.length
         ? rest
@@ -497,7 +514,7 @@
           bits.push(
             '<a href="' +
               esc(linkHref) +
-              '" class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white hover:bg-indigo-700" target="_blank" rel="noopener noreferrer">Visit site <i class="fas fa-external-link-alt text-[10px]"></i></a>'
+              '" class="btn-outline-grad rounded-lg px-3.5 py-2 text-sm" target="_blank" rel="noopener noreferrer">Visit site <i class="fas fa-external-link-alt text-[10px]"></i></a>'
           );
         }
         if (gh !== "#") {
