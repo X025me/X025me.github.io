@@ -9,6 +9,7 @@ COPY . /usr/share/nginx/html
 
 # Expose port 80 to serve the application
 EXPOSE 8005
+# Empity Commit
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
